@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { DecoherenceLab } from "./interactive/decoherence-lab"
+import { InsightsPanel } from "./interactive/insights-panel"
 
 export function ChallengesSection() {
   useEffect(() => {
@@ -45,6 +46,8 @@ export function ChallengesSection() {
             </div>
           ))}
         </div>
+
+        <InsightsPanel section="challenges" accentColor="#f87171" />
       </div>
     </section>
   )

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { SpeedupExplorer } from "./interactive/speedup-explorer"
+import { InsightsPanel } from "./interactive/insights-panel"
 
 export function BenefitsSection() {
   useEffect(() => {
@@ -46,6 +47,8 @@ export function BenefitsSection() {
             </div>
           ))}
         </div>
+
+        <InsightsPanel section="benefits" accentColor="#34d399" />
       </div>
     </section>
   )

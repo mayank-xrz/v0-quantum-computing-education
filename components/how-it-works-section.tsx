@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { QuantumCircuitBuilder } from "./interactive/quantum-circuit-builder"
+import { InsightsPanel } from "./interactive/insights-panel"
 
 export function HowItWorksSection() {
   useEffect(() => {
@@ -45,6 +46,8 @@ export function HowItWorksSection() {
             </div>
           ))}
         </div>
+
+        <InsightsPanel section="how-it-works" accentColor="#a78bfa" />
       </div>
     </section>
   )
