@@ -1,15 +1,16 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, type Ref } from "react"
 import type { StateVector } from "@/lib/quantum/state-vector"
 
 interface Props {
   stateVector: StateVector
   size?: number
+  svgRef?: Ref<SVGSVGElement>
 }
 
 /** Mathematically correct Bloch sphere driven by the live state vector. */
-export function BlochSphere({ stateVector, size = 200 }: Props) {
+export function BlochSphere({ stateVector, size = 200, svgRef }: Props) {
   const bloch = stateVector.blochVector()
 
   const { arrowX, arrowY, arrowTip, theta, phi } = useMemo(() => {
@@ -54,10 +55,12 @@ export function BlochSphere({ stateVector, size = 200 }: Props) {
   return (
     <div className="flex flex-col items-center gap-2">
       <svg
+        ref={svgRef}
         width={size}
         height={size}
         viewBox={`0 0 ${size} ${size}`}
         className="drop-shadow-lg"
+        data-bloch-sphere
         aria-label="Bloch sphere visualization of qubit state"
       >
         {/* Outer glow */}
