@@ -14,6 +14,7 @@ import {
 import { CircuitBuilder } from "@/components/circuit/CircuitBuilder"
 import { GatePalette } from "@/components/circuit/GatePalette"
 import { StateDisplay } from "@/components/circuit/StateDisplay"
+import { QiskitExportModal } from "@/components/circuit/QiskitExportModal"
 import { BlochSphere } from "@/components/bloch/BlochSphere"
 import { QuantumTutor } from "@/components/tutor/QuantumTutor"
 import { AlgorithmVisualizer } from "@/components/algorithm/AlgorithmVisualizer"
@@ -38,6 +39,7 @@ export default function PlaygroundPage() {
   const [showTour, setShowTour] = useState(false)
   const [shareToast, setShareToast] = useState(false)
   const [showDemoMenu, setShowDemoMenu] = useState(false)
+  const [showQiskit, setShowQiskit] = useState(false)
   const blochRef = useRef<SVGSVGElement | null>(null)
   const demoMenuRef = useRef<HTMLDivElement>(null)
 
@@ -129,6 +131,11 @@ export default function PlaygroundPage() {
         />
       )}
 
+      {/* Qiskit export modal */}
+      {showQiskit && (
+        <QiskitExportModal circuit={circuit} onClose={() => setShowQiskit(false)} />
+      )}
+
       {/* Share toast */}
       {shareToast && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-xl bg-slate-800 border border-slate-600 text-sm text-slate-200 shadow-xl">
@@ -187,6 +194,17 @@ export default function PlaygroundPage() {
           aria-label="Show interactive tour"
         >
           <HelpCircle className="w-4 h-4" />
+        </button>
+
+        {/* Export to Qiskit */}
+        <button
+          onClick={() => setShowQiskit(true)}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-slate-400 hover:text-cyan-300 border border-transparent hover:border-cyan-900 hover:bg-cyan-950/30 transition-all"
+          title="Export circuit as Qiskit Python code"
+          aria-label="Export to Qiskit"
+        >
+          <span className="font-mono font-bold text-[10px]">Py</span>
+          <span className="hidden sm:inline">Qiskit</span>
         </button>
 
         {/* Share */}
