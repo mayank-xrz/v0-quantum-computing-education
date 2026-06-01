@@ -73,4 +73,20 @@ export class StateVector {
   static fromJSON(data: { re: number; im: number }[]): StateVector {
     return new StateVector(data.map((d) => c(d.re, d.im)))
   }
+
+  /**
+   * Quantum fidelity: |⟨ψ_target|ψ_result⟩|²
+   * = 1 when states are identical (up to global phase), 0 when orthogonal.
+   */
+  fidelity(other: StateVector): number {
+    if (this.dim !== other.dim) return 0
+    let re = 0, im = 0
+    for (let i = 0; i < this.dim; i++) {
+      // ⟨this|other⟩ = sum conj(this[i]) * other[i]
+      const dot = this.amplitudes[i].conj().mul(other.amplitudes[i])
+      re += dot.re
+      im += dot.im
+    }
+    return re * re + im * im  // |⟨ψ|φ⟩|²
+  }
 }
