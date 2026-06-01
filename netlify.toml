@@ -1,0 +1,25 @@
+# Netlify configuration for Next.js with server-side API routes
+# Uses the official @netlify/plugin-nextjs runtime so that:
+#   - /api/tutor (Dynamic server route) runs as a Netlify Function
+#   - /playground (Static) is served from the CDN edge
+#   - ISR and streaming responses work correctly
+
+[build]
+  command = "pnpm build"
+  publish = ".next"
+
+# Netlify's official Next.js plugin — handles server functions automatically
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Production deploys from main only
+# Feature branches get deploy previews (controlled in Netlify dashboard)
+[context.production]
+  command = "pnpm build"
+
+[context.deploy-preview]
+  command = "pnpm build"
+
+# Required environment variables (set real values in Netlify dashboard:
+#   Site settings → Environment variables)
+# ANTHROPIC_API_KEY — server-side only, never expose to the browser
