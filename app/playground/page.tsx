@@ -19,6 +19,7 @@ import { BlochSphere } from "@/components/bloch/BlochSphere"
 import { QuantumTutor } from "@/components/tutor/QuantumTutor"
 import { AlgorithmVisualizer } from "@/components/algorithm/AlgorithmVisualizer"
 import { TeleportVisualizer } from "@/components/algorithm/TeleportVisualizer"
+import { DailyPuzzle } from "@/components/puzzle/DailyPuzzle"
 import { Tour } from "@/components/onboarding/Tour"
 import { simulateCircuit } from "@/lib/quantum/circuit"
 import { encodeCircuit, decodeCircuit, exportSvgAsPng } from "@/lib/quantum/share"
@@ -30,7 +31,7 @@ import { cn } from "@/lib/utils"
 const INITIAL_CIRCUIT: CircuitState = { numQubits: 1, gates: [] }
 const TOUR_KEY = "qlearn-tour-done"
 
-type RightPanel = "state" | "tutor" | "algorithms" | "teleport"
+type RightPanel = "state" | "tutor" | "algorithms" | "teleport" | "puzzle"
 
 export default function PlaygroundPage() {
   const [circuit, setCircuit] = useState<CircuitState>(INITIAL_CIRCUIT)
@@ -119,6 +120,7 @@ export default function PlaygroundPage() {
     { id: "tutor", label: "AI Tutor" },
     { id: "algorithms", label: "Algorithms" },
     { id: "teleport", label: "Teleport" },
+    { id: "puzzle", label: "🏆 Daily" },
   ]
 
   return (
@@ -325,6 +327,14 @@ export default function PlaygroundPage() {
             )}
             {rightPanel === "teleport" && (
               <TeleportVisualizer onLoadCircuit={handleLoadAlgoCircuit} />
+            )}
+            {rightPanel === "puzzle" && (
+              <DailyPuzzle
+                circuit={circuit}
+                onSetup={(n) =>
+                  handleCircuitChange({ numQubits: n, gates: [] })
+                }
+              />
             )}
           </div>
         </aside>
