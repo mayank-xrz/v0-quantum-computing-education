@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, FlaskConical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QubitVisualization } from "./qubit-visualization";
 
@@ -37,12 +38,17 @@ export function HeroSection() {
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button size="lg" className="group">
-                Start Learning
-                <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+              <Button size="lg" className="group" asChild>
+                <Link href="/playground">
+                  Open Playground
+                  <FlaskConical className="ml-2 w-4 h-4 transition-transform group-hover:scale-110" />
+                </Link>
               </Button>
-              <Button size="lg" variant="outline">
-                Watch Demo
+              <Button size="lg" variant="outline" asChild>
+                <Link href="#how-it-works">
+                  How It Works
+                  <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </Link>
               </Button>
             </div>
 
