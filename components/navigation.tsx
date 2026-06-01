@@ -11,7 +11,7 @@ const NAV_LINKS = [
   { name: "How It Works", href: "/#how-it-works" },
   { name: "Challenges",   href: "/#challenges" },
   { name: "Benefits",     href: "/#benefits" },
-  { name: "Resources",    href: "/#resources" },
+  { name: "Learn",        href: "/learn" },
 ];
 
 export function Navigation() {
