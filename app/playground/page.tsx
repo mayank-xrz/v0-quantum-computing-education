@@ -14,6 +14,7 @@ import { StateDisplay } from "@/components/circuit/StateDisplay"
 import { QiskitExportModal } from "@/components/circuit/QiskitExportModal"
 import { BlochSphere } from "@/components/bloch/BlochSphere"
 import { Tour } from "@/components/onboarding/Tour"
+import { ErrorBoundary } from "@/components/ErrorBoundary"
 import { simulateCircuit } from "@/lib/quantum/circuit"
 import { encodeCircuit, decodeCircuit, exportSvgAsPng } from "@/lib/quantum/share"
 import { PRESET_CIRCUITS } from "@/lib/quantum/algorithms"
@@ -187,13 +188,17 @@ export default function PlaygroundPage() {
         {/* Center: circuit + Bloch */}
         <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
           <div id="tour-circuit" className="p-4 border-b border-slate-800">
-            <CircuitBuilder circuit={circuit} onChange={handleCircuitChange} />
+            <ErrorBoundary label="Circuit Builder">
+              <CircuitBuilder circuit={circuit} onChange={handleCircuitChange} />
+            </ErrorBoundary>
           </div>
 
           {isSingleQubit && (
             <div id="tour-bloch" className="flex flex-col items-center gap-2 py-5 border-b border-slate-800">
               <p className="text-[10px] uppercase tracking-widest text-slate-600">Bloch Sphere — q0</p>
-              <BlochSphere stateVector={simulation.stateVector} size={200} svgRef={blochRef} />
+              <ErrorBoundary label="Bloch Sphere">
+                <BlochSphere stateVector={simulation.stateVector} size={200} svgRef={blochRef} />
+              </ErrorBoundary>
             </div>
           )}
 
@@ -215,7 +220,9 @@ export default function PlaygroundPage() {
             <span className="text-[10px] font-semibold uppercase tracking-wider text-cyan-400">State</span>
           </div>
           <div className="flex-1 overflow-y-auto p-4">
-            <StateDisplay result={simulation} numQubits={circuit.numQubits} selectedGate={selectedGate} />
+            <ErrorBoundary label="State Display">
+              <StateDisplay result={simulation} numQubits={circuit.numQubits} selectedGate={selectedGate} />
+            </ErrorBoundary>
           </div>
         </aside>
       </div>
