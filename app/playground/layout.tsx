@@ -30,7 +30,7 @@ export default function PlaygroundLayout({ children }: { children: React.ReactNo
         <h1 className="text-sm font-semibold text-slate-200">Playground</h1>
 
         {/* Tab nav */}
-        <nav className="flex items-center gap-1 ml-4">
+        <nav aria-label="Playground sections" className="flex items-center gap-1 ml-4">
           {TABS.map((tab) => {
             const active =
               tab.href === "/playground"
@@ -40,6 +40,7 @@ export default function PlaygroundLayout({ children }: { children: React.ReactNo
               <Link
                 key={tab.href}
                 href={tab.href}
+                aria-current={active ? "page" : undefined}
                 className={cn(
                   "px-3 py-1 rounded-md text-xs font-medium transition-colors",
                   active
