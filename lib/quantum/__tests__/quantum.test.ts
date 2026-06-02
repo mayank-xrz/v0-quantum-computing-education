@@ -155,17 +155,82 @@ describe("simulateCircuit", () => {
 // ── Bloch vector ──────────────────────────────────────────────────────────
 
 describe("Bloch vector", () => {
-  it("|0⟩ → north pole (z=+1)", () => {
+  it("|0⟩ → north pole (z=+1, x=0, y=0)", () => {
     const v = StateVector.zero(1).blochVector()!
     expect(near(v.z, 1)).toBe(true)
     expect(near(v.x, 0)).toBe(true)
+    expect(near(v.y, 0)).toBe(true)
   })
 
-  it("|+⟩ = H|0⟩ → equator (x=+1, z=0)", () => {
+  it("|1⟩ = X|0⟩ → south pole (z=-1, x=0, y=0)", () => {
+    let state = StateVector.zero(1)
+    state = applySingleQubitGate(state, GATE_MATRICES.X, 0)
+    const v = state.blochVector()!
+    expect(near(v.z, -1)).toBe(true)
+    expect(near(v.x, 0)).toBe(true)
+    expect(near(v.y, 0)).toBe(true)
+  })
+
+  it("|+⟩ = H|0⟩ → +X pole (x=+1, y=0, z=0)", () => {
     let state = StateVector.zero(1)
     state = applySingleQubitGate(state, GATE_MATRICES.H, 0)
     const v = state.blochVector()!
     expect(near(v.x, 1)).toBe(true)
+    expect(near(v.y, 0)).toBe(true)
     expect(near(v.z, 0)).toBe(true)
+  })
+
+  it("|−⟩ = H|1⟩ → -X pole (x=-1, y=0, z=0)", () => {
+    let state = StateVector.zero(1)
+    state = applySingleQubitGate(state, GATE_MATRICES.X, 0)
+    state = applySingleQubitGate(state, GATE_MATRICES.H, 0)
+    const v = state.blochVector()!
+    expect(near(v.x, -1)).toBe(true)
+    expect(near(v.y, 0)).toBe(true)
+    expect(near(v.z, 0)).toBe(true)
+  })
+
+  it("|+y⟩ = S|+⟩ → +Y pole (x=0, y=+1, z=0)", () => {
+    // (|0⟩+i|1⟩)/√2: the +Y eigenstate
+    let state = StateVector.zero(1)
+    state = applySingleQubitGate(state, GATE_MATRICES.H, 0)
+    state = applySingleQubitGate(state, GATE_MATRICES.S, 0)
+    const v = state.blochVector()!
+    expect(near(v.x, 0)).toBe(true)
+    expect(near(v.y, 1)).toBe(true)
+    expect(near(v.z, 0)).toBe(true)
+  })
+
+  it("|−y⟩ = S†|+⟩ → -Y pole (x=0, y=-1, z=0)", () => {
+    // Apply S three times = S†: (|0⟩-i|1⟩)/√2
+    let state = StateVector.zero(1)
+    state = applySingleQubitGate(state, GATE_MATRICES.H, 0)
+    state = applySingleQubitGate(state, GATE_MATRICES.S, 0)
+    state = applySingleQubitGate(state, GATE_MATRICES.S, 0)
+    state = applySingleQubitGate(state, GATE_MATRICES.S, 0)
+    const v = state.blochVector()!
+    expect(near(v.x, 0)).toBe(true)
+    expect(near(v.y, -1)).toBe(true)
+    expect(near(v.z, 0)).toBe(true)
+  })
+
+  it("Bloch vector has unit length for any pure state", () => {
+    // T|+⟩ — arbitrary state on the sphere
+    let state = StateVector.zero(1)
+    state = applySingleQubitGate(state, GATE_MATRICES.H, 0)
+    state = applySingleQubitGate(state, GATE_MATRICES.T, 0)
+    const v = state.blochVector()!
+    const len = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+    expect(near(len, 1)).toBe(true)
+  })
+
+  it("Y gate: Y|0⟩ = i|1⟩ → same Bloch position as |1⟩", () => {
+    let state = StateVector.zero(1)
+    state = applySingleQubitGate(state, GATE_MATRICES.Y, 0)
+    // i|1⟩ has same Bloch vector as |1⟩ (global phase doesn't shift Bloch vector)
+    const v = state.blochVector()!
+    expect(near(v.z, -1)).toBe(true)
+    expect(near(v.x, 0)).toBe(true)
+    expect(near(v.y, 0)).toBe(true)
   })
 })

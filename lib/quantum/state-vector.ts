@@ -46,9 +46,10 @@ export class StateVector {
     const [a, b] = this.amplitudes
     // θ/2 encodes z = cos θ, x = sin θ cos φ, y = sin θ sin φ
     const z = a.absSquared() - b.absSquared()
+    // offDiag = ᾱβ; x = 2Re(ᾱβ), y = 2Im(ᾱβ), z = |α|²−|β|²
     const offDiag = a.conj().mul(b)
     const x = 2 * offDiag.re
-    const y = -2 * offDiag.im
+    const y = 2 * offDiag.im
     return { x, y, z }
   }
 
