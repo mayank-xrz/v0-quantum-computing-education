@@ -1,83 +1,39 @@
 # QuantumLearn
 
-An interactive quantum computing education platform built with Next.js 15, React 19, and TypeScript. Features a physically correct quantum circuit simulator, AI-powered tutor, and step-by-step algorithm visualizer.
+An interactive quantum computing education platform — physically correct circuit simulator, AI-powered tutor, step-by-step algorithm visualizer, and structured learning tracks.
 
-> **Placed 5th of 130 projects.** Now rebuilt as a real product.
-
----
-
-## What makes this different
-
-| Feature | Generic tutorials | QuantumLearn |
-|---|---|---|
-| Quantum simulation | Screenshots / descriptions | Live state vector, Born-rule probabilities, unitary matrices |
-| AI assistance | Generic chatbot | Circuit-aware tutor that reads your live gates & state |
-| Algorithm demos | Static diagrams | Animated step-by-step with scrubable timeline |
-| Bloch sphere | Decorative animation | Mathematically correct: driven by actual state vector |
-| Correctness | Unverified | 26 tests verify H\|0⟩, Bell state, Grover's, Deutsch-Jozsa |
-| Sharing | None | Lossless URL hash — share any circuit with a link |
+Live: **[quantum-study.netlify.app](https://quantum-study.netlify.app)**
 
 ---
 
-## Features
+## Standout features
 
-### Quantum Playground (`/playground`)
-
-- **Drag-and-drop circuit builder** — 12 gates: H, X, Y, Z, S, T, I, CNOT, CZ, SWAP, Rx, Ry, Rz (up to 4 qubits, 10 columns)
-- **Live state vector** — updates after every gate, shown in Dirac notation
-- **Measurement probabilities** — bar chart with exact percentages
-- **Gate unitary matrices** — click any gate to see its matrix
-- **Bloch sphere** — real SVG sphere driven by the state vector (single-qubit mode), with θ, φ, z readout
-- **Save & share** — circuit encodes to URL hash; paste the link to share an exact circuit
-- **Export** — download Bloch sphere as PNG
-
-### AI Quantum Tutor
-
-- **Circuit-aware** — every question is answered in the context of your actual gates, state vector, and probabilities
-- **Quick actions** — "Explain my last move", "What should I try next?", "Show me the math"
-- **Quiz mode** — the tutor generates a question about your circuit and grades your answer
-- **Streaming** — responses stream token-by-token; retry on error
-
-### Algorithm Visualizer
-
-- **Grover's Search (2-qubit)** — step-by-step: initialise → superposition → oracle → diffusion. Shows how P(\|11⟩) goes from 0.25 to 1.0
-- **Deutsch-Jozsa** — balanced oracle demo with phase kickback explanation
-- **Animated timeline** — play/pause/scrub through steps; amplitude bars animate between states
-- **Load into builder** — any algorithm step loads into the circuit builder for tinkering
-- **Sourced references** — links to Qiskit textbook and Nielsen & Chuang for each key step
-
-### Demo Circuits (Surprise me)
-
-- Bell State |Φ+⟩
-- Equal Superposition |+⟩
-- GHZ State (3-qubit)
-- Phase Kickback (H + T + H)
-
-### Interactive Tour
-
-First-time visitors get a 4-step spotlight tour: circuit builder → Bloch sphere → state panel → AI tutor.
+| Feature | What it does |
+|---|---|
+| **Quantum simulation** | Zero-dependency TypeScript engine: complex amplitudes, Born-rule probabilities, unitary matrices for all gates |
+| **Bloch sphere** | Mathematically correct — driven by the live state vector, all 6 poles verified by tests |
+| **AI Quantum Tutor** | Circuit-aware: every answer is grounded in your actual gates, state vector, and probabilities |
+| **Algorithm visualizer** | Grover's search and Deutsch-Jozsa with animated, scrubable timelines |
+| **Teleportation visualizer** | 5-step protocol with entanglement correlation heatmaps |
+| **Daily puzzle** | Fidelity-based verification, streak tracker (localStorage), shareable results |
+| **Qiskit export** | One click to generate valid Qiskit 1.x Python for any circuit |
+| **Share links** | Circuit encodes losslessly to URL hash — paste the link to share |
+| **Learn section** | 7 structured topic pages (Beginner → Advanced), statically prerendered |
+| **99 automated tests** | Every gate matrix, Bell state, Grover's convergence, Deutsch-Jozsa, teleportation, fidelity |
 
 ---
 
-## Quantum correctness
+## Pages
 
-All gate unitaries, state-vector evolution, and measurement probabilities are verified by automated tests:
-
-```bash
-pnpm test
-```
-
-Key verified results:
-- H|0⟩ = (|0⟩+|1⟩)/√2 ✓
-- H is its own inverse (H² = I) ✓
-- Bell state via H⊗CNOT = (|00⟩+|11⟩)/√2 ✓
-- Grover's: P(|11⟩) = 1 after one iteration ✓
-- Deutsch-Jozsa: q0 = |1⟩ for balanced oracle ✓
-- Probability normalization for all circuits ✓
-
-References:
-- Nielsen & Chuang, *Quantum Computation and Quantum Information* (Cambridge University Press)
-- IBM Qiskit Textbook — [learning.quantum.ibm.com](https://learning.quantum.ibm.com)
+| Route | Description |
+|---|---|
+| `/` | Landing page with live animated Bloch sphere |
+| `/playground` | Circuit builder + Bloch sphere + state display |
+| `/playground/tutor` | AI Quantum Tutor (circuit-aware, streaming, quiz mode) |
+| `/playground/algorithms` | Grover's, Deutsch-Jozsa, and quantum teleportation visualizers |
+| `/playground/puzzle` | Daily puzzle with fidelity meter and streak tracking |
+| `/learn` | Topic index (7 lessons) |
+| `/learn/[topic]` | Individual lesson pages with math blocks and prev/next navigation |
 
 ---
 
@@ -87,20 +43,69 @@ References:
 git clone https://github.com/mayank-xrz/v0-quantum-computing-education
 cd v0-quantum-computing-education
 pnpm install
-cp .env.example .env.local
-# Edit .env.local and add your Anthropic API key
-pnpm dev
+cp .env.example .env.local   # or create .env.local manually
 ```
 
-Open [http://localhost:3000/playground](http://localhost:3000/playground).
+Add your Anthropic API key to `.env.local`:
 
-### Environment variables
+```
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+```bash
+pnpm dev        # http://localhost:3000
+pnpm build      # production build
+pnpm test       # 99 automated tests
+```
+
+> **Without `ANTHROPIC_API_KEY`** — all features except the AI Tutor work fully (the tutor returns a clear error message instead of a blank screen).
+
+---
+
+## Environment variables
 
 | Variable | Required | Description |
 |---|---|---|
-| `ANTHROPIC_API_KEY` | Yes (for AI Tutor) | Server-side only. Get at [console.anthropic.com](https://console.anthropic.com). Never exposed to the browser. |
+| `ANTHROPIC_API_KEY` | For AI Tutor | **Server-side only** — never exposed to the browser. Get one at [console.anthropic.com](https://console.anthropic.com). |
 
-Without `ANTHROPIC_API_KEY`, all features except the AI Tutor work fully.
+---
+
+## Quantum correctness
+
+All gate unitaries, state-vector evolution, and measurement probabilities are verified by 99 automated tests.
+
+```bash
+pnpm test
+```
+
+Key verified results:
+
+- H|0⟩ = (|0⟩+|1⟩)/√2 ✓
+- H² = I (Hadamard is its own inverse) ✓
+- Bell state (H⊗CNOT)|00⟩ = (|00⟩+|11⟩)/√2 ✓
+- Bloch sphere: all 6 poles (±X, ±Y, ±Z), unit-length invariant ✓
+- Y gate: Y|0⟩ = i|1⟩, Bloch vector at south pole (global phase invariant) ✓
+- Grover's: P(|11⟩) = 1 after one iteration on 2-qubit target ✓
+- Deutsch-Jozsa: q0 = |1⟩ for balanced oracle ✓
+- Teleportation: probabilities sum to 1 at every step ✓
+- Fidelity: |⟨ψ|ψ⟩|² = 1, orthogonal states = 0 ✓
+
+References:
+- Nielsen & Chuang, *Quantum Computation and Quantum Information*
+- IBM Qiskit Textbook — [learning.quantum.ibm.com](https://learning.quantum.ibm.com)
+
+---
+
+## Demo circuits
+
+Open the playground and click **Demo** to load:
+
+| Circuit | What it demonstrates |
+|---|---|
+| Bell State |Φ+⟩ | Maximal entanglement between 2 qubits |
+| Equal Superposition |+⟩ | H gate, 50/50 measurement probability |
+| GHZ State (3-qubit) | Multi-qubit entanglement |
+| Phase Kickback | H + T + H phase interference |
 
 ---
 
@@ -108,12 +113,12 @@ Without `ANTHROPIC_API_KEY`, all features except the AI Tutor work fully.
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 15 (App Router), React 19, TypeScript 5.7 |
-| Quantum engine | Custom — `lib/quantum/` (zero dependencies) |
-| UI | Tailwind CSS 4, shadcn/ui, Lucide icons |
-| AI | Anthropic API (`@anthropic-ai/sdk`), streaming via `ReadableStream` |
-| Tests | Vitest |
-| Deployment | Vercel |
+| Framework | Next.js 16 (App Router), React 19, TypeScript 5.7 |
+| Quantum engine | Custom — `lib/quantum/` (zero dependencies, pure TS) |
+| UI | Tailwind CSS 4, shadcn/ui (new-york), Lucide icons |
+| AI | `@anthropic-ai/sdk`, streaming via `ReadableStream` (server-side) |
+| Tests | Vitest 4 |
+| Deployment | Netlify (`@netlify/plugin-nextjs`) |
 
 ---
 
@@ -121,22 +126,33 @@ Without `ANTHROPIC_API_KEY`, all features except the AI Tutor work fully.
 
 ```
 lib/quantum/
-  complex.ts        — Complex number arithmetic
-  state-vector.ts   — 2ⁿ-dimensional state, Born rule, Bloch vector
-  gates.ts          — Unitary matrices + single/two-qubit application
-  circuit.ts        — Circuit model + simulation engine
-  algorithms.ts     — Grover's, Deutsch-Jozsa step definitions + presets
-  share.ts          — URL hash encoding/decoding, PNG export
+  complex.ts          — Immutable complex number arithmetic
+  state-vector.ts     — 2ⁿ state, Born rule, Bloch vector (all 6 poles verified)
+  gates.ts            — All gate matrices + single/two-qubit application
+  circuit.ts          — Circuit model + simulation engine
+  algorithms.ts       — Grover's, Deutsch-Jozsa, preset circuits
+  teleportation.ts    — 5-step teleportation with joint marginals
+  qiskit-export.ts    — Qiskit 1.x Python code generation
+  puzzle.ts           — Daily puzzle pool, fidelity check, streak storage
+  share.ts            — URL hash encoding + PNG export
+  __tests__/          — 99 tests covering all of the above
+
+lib/learn/
+  topics.ts           — 7 structured topic definitions
 
 app/
-  page.tsx          — Landing page
-  playground/       — Main interactive playground
-  api/tutor/        — Streaming AI tutor (server-side, key never in browser)
+  page.tsx            — Landing page with live Bloch sphere
+  playground/         — Multi-page playground (layout + 4 sub-routes)
+  learn/              — Static topic index + 7 SSG topic pages
+  api/tutor/          — Streaming AI tutor (server-only, key never in browser)
+  not-found.tsx       — Custom 404 page
 
 components/
-  circuit/          — CircuitBuilder, GatePalette, StateDisplay
-  bloch/            — Real Bloch sphere (SVG, state-vector driven)
-  tutor/            — QuantumTutor chat (streaming, quiz mode, retry)
-  algorithm/        — AlgorithmVisualizer with timeline
-  onboarding/       — First-run spotlight tour
+  circuit/            — CircuitBuilder, GatePalette, StateDisplay, QiskitExportModal
+  bloch/              — Real Bloch sphere (SVG, state-vector driven)
+  tutor/              — QuantumTutor (streaming, quiz mode, 45s timeout, retry)
+  algorithm/          — AlgorithmVisualizer, TeleportVisualizer
+  puzzle/             — DailyPuzzle (fidelity meter, streak, share)
+  onboarding/         — First-run spotlight tour
+  ErrorBoundary.tsx   — Class-based boundary wrapping each major panel
 ```
