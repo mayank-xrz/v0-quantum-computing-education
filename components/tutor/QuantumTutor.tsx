@@ -63,6 +63,8 @@ export function QuantumTutor({ circuit }: Props) {
 
       setIsStreaming(true)
       abortRef.current = new AbortController()
+      // Auto-cancel after 45 s to prevent infinite hangs
+      const timeoutId = setTimeout(() => abortRef.current?.abort(), 45_000)
 
       try {
         const res = await fetch("/api/tutor", {
@@ -100,11 +102,16 @@ export function QuantumTutor({ circuit }: Props) {
           })
         }
       } catch (err) {
-        if (err instanceof Error && err.name === "AbortError") return
+        if (err instanceof Error && err.name === "AbortError") {
+          setError("Request timed out. Please try again.")
+          setMessages((prev) => prev.slice(0, -1))
+          return
+        }
         const msg = err instanceof Error ? err.message : "Something went wrong"
         setError(msg)
         setMessages((prev) => prev.slice(0, -1)) // remove empty assistant msg
       } finally {
+        clearTimeout(timeoutId)
         setIsStreaming(false)
         abortRef.current = null
         inputRef.current?.focus()

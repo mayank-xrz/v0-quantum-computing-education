@@ -1,22 +1,26 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { QuantumTutor } from "@/components/tutor/QuantumTutor"
 import { decodeCircuit } from "@/lib/quantum/share"
 import type { CircuitState } from "@/lib/quantum/circuit"
 
 const INITIAL: CircuitState = { numQubits: 1, gates: [] }
 
-export default function TutorPage() {
-  const [circuit, setCircuit] = useState<CircuitState>(INITIAL)
+function initialCircuit(): CircuitState {
+  if (typeof window === "undefined") return INITIAL
+  const hash = window.location.hash.slice(1)
+  if (hash) {
+    const decoded = decodeCircuit(hash)
+    if (decoded) return decoded
+  }
+  return INITIAL
+}
 
-  useEffect(() => {
-    const hash = window.location.hash.slice(1)
-    if (hash) {
-      const decoded = decodeCircuit(hash)
-      if (decoded) setCircuit(decoded)
-    }
-  }, [])
+export default function TutorPage() {
+  // Decode circuit synchronously on first render so quick-action buttons
+  // always send the correct circuit even if clicked immediately.
+  const [circuit] = useState<CircuitState>(initialCircuit)
 
   return (
     <div className="flex flex-col w-full min-h-0 overflow-hidden">
