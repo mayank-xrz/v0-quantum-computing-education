@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useMemo, useCallback } from "react"
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react"
 import {
   Play, Pause, SkipBack, SkipForward, ChevronRight, ExternalLink,
 } from "lucide-react"
@@ -236,8 +236,8 @@ function CorrelationGrid({
         ))}
         {/* Data rows */}
         {labels.map((rowL, ri) => (
-          <>
-            <div key={`r${ri}`} className="text-slate-600 flex items-center">{rowL}</div>
+          <React.Fragment key={ri}>
+            <div className="text-slate-600 flex items-center">{rowL}</div>
             {labels.map((_, ci) => {
               const idx = ri * 2 + ci
               const p = joint[idx]
@@ -264,7 +264,7 @@ function CorrelationGrid({
                 </div>
               )
             })}
-          </>
+          </React.Fragment>
         ))}
       </div>
     </div>
