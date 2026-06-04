@@ -12,6 +12,7 @@ import { CircuitBuilder } from "@/components/circuit/CircuitBuilder"
 import { GatePalette } from "@/components/circuit/GatePalette"
 import { StateDisplay } from "@/components/circuit/StateDisplay"
 import { QiskitExportModal } from "@/components/circuit/QiskitExportModal"
+import { OpenQASMModal } from "@/components/circuit/OpenQASMModal"
 import { BlochSphere } from "@/components/bloch/BlochSphere"
 import { Tour } from "@/components/onboarding/Tour"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
@@ -32,6 +33,7 @@ export default function PlaygroundPage() {
   const [shareToast, setShareToast] = useState(false)
   const [showDemoMenu, setShowDemoMenu] = useState(false)
   const [showQiskit, setShowQiskit] = useState(false)
+  const [showQASM, setShowQASM] = useState(false)
   const blochRef = useRef<SVGSVGElement | null>(null)
   const demoMenuRef = useRef<HTMLDivElement>(null)
 
@@ -116,6 +118,13 @@ export default function PlaygroundPage() {
       {showQiskit && (
         <QiskitExportModal circuit={circuit} onClose={() => setShowQiskit(false)} />
       )}
+      {showQASM && (
+        <OpenQASMModal
+          circuit={circuit}
+          onClose={() => setShowQASM(false)}
+          onImport={(c) => { handleCircuitChange(c); setShowQASM(false) }}
+        />
+      )}
       {shareToast && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-xl bg-slate-800 border border-slate-600 text-sm text-slate-200 shadow-xl">
           Link copied to clipboard!
@@ -163,6 +172,14 @@ export default function PlaygroundPage() {
         >
           <span className="font-mono font-bold text-[10px]">Py</span>
           <span className="hidden sm:inline">Qiskit</span>
+        </button>
+
+        <button
+          onClick={() => setShowQASM(true)}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-slate-400 hover:text-cyan-300 border border-transparent hover:border-cyan-900 hover:bg-cyan-950/30 transition-all"
+        >
+          <span className="font-mono font-bold text-[10px]">QS</span>
+          <span className="hidden sm:inline">QASM</span>
         </button>
 
         <button
