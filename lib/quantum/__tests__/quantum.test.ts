@@ -234,3 +234,53 @@ describe("Bloch vector", () => {
     expect(near(v.y, 0)).toBe(true)
   })
 })
+
+// ── Bloch → Three.js coordinate mapping ──────────────────────────────────────
+// Mapping: three(x,y,z) = (bloch.x, bloch.z, bloch.y)
+// This ensures |0⟩ appears at the top (Three.js +Y) and |1⟩ at the bottom.
+
+describe("Bloch-to-Three.js coordinate mapping", () => {
+  function blochToThree(b: { x: number; y: number; z: number }) {
+    return { tx: b.x, ty: b.z, tz: b.y }
+  }
+
+  it("|0⟩ maps to Three.js top pole (0,+1,0)", () => {
+    const state = StateVector.zero(1)
+    const b = state.blochVector()!
+    const t = blochToThree(b)
+    expect(near(t.tx, 0)).toBe(true)
+    expect(near(t.ty, 1)).toBe(true)
+    expect(near(t.tz, 0)).toBe(true)
+  })
+
+  it("|1⟩ maps to Three.js bottom pole (0,-1,0)", () => {
+    let state = StateVector.zero(1)
+    state = applySingleQubitGate(state, GATE_MATRICES.X, 0)
+    const b = state.blochVector()!
+    const t = blochToThree(b)
+    expect(near(t.tx, 0)).toBe(true)
+    expect(near(t.ty, -1)).toBe(true)
+    expect(near(t.tz, 0)).toBe(true)
+  })
+
+  it("|+⟩ maps to Three.js +X axis (1,0,0)", () => {
+    let state = StateVector.zero(1)
+    state = applySingleQubitGate(state, GATE_MATRICES.H, 0)
+    const b = state.blochVector()!
+    const t = blochToThree(b)
+    expect(near(t.tx, 1)).toBe(true)
+    expect(near(t.ty, 0)).toBe(true)
+    expect(near(t.tz, 0)).toBe(true)
+  })
+
+  it("|+y⟩ = S|+⟩ maps to Three.js +Z axis (0,0,+1)", () => {
+    let state = StateVector.zero(1)
+    state = applySingleQubitGate(state, GATE_MATRICES.H, 0)
+    state = applySingleQubitGate(state, GATE_MATRICES.S, 0)
+    const b = state.blochVector()!
+    const t = blochToThree(b)
+    expect(near(t.tx, 0)).toBe(true)
+    expect(near(t.ty, 0)).toBe(true)
+    expect(near(t.tz, 1)).toBe(true)
+  })
+})

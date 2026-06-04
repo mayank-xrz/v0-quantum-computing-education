@@ -87,6 +87,16 @@ export default function PlaygroundPage() {
   }
 
   const handleExport = async () => {
+    // 3D canvas takes priority; fall back to SVG if only the 2D fallback is rendered
+    const canvas = document.querySelector<HTMLCanvasElement>("canvas[data-bloch-canvas]")
+    if (canvas) {
+      const url = canvas.toDataURL("image/png")
+      const a = document.createElement("a")
+      a.href = url
+      a.download = "bloch-sphere.png"
+      a.click()
+      return
+    }
     const svg = document.querySelector<SVGSVGElement>("[data-bloch-sphere]")
     if (svg) await exportSvgAsPng(svg, "bloch-sphere.png")
   }
