@@ -2,7 +2,7 @@
 
 An interactive quantum computing education platform — physically correct circuit simulator, AI-powered tutor, step-by-step algorithm visualizer, and structured learning tracks.
 
-Live: **[quantum-study.netlify.app](https://v0-quantum-computing-education-84le.vercel.app/)**
+Live: **[quantum-study.vercel.app](https://v0-quantum-computing-education-84le.vercel.app/)**
 
 ---
 
